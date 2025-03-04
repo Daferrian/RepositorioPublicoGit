@@ -1,19 +1,28 @@
-import { useState } from "react";
-import { Producto } from "./types"; 
+// import { useState } from "react";
 
-function useProductSearch(productos: Producto[]) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState<Producto[]>(productos);
+// interface Producto {
+//   id: number;
+//   nombre: string;
+//   precio: number;
+//   descripcion: string;
+//   marca: string;
+//   especificacion: string;
+//   categoria: string;
+// }
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    const results = productos.filter((producto) =>
-      producto.nombre.toLowerCase().includes(term.toLowerCase())
-    );
-    setFilteredProducts(results);
-  };
+// function useProductSearch() {
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [filteredProducts, setFilteredProducts] = useState<Producto[]>(productos);
 
-  return { searchTerm, filteredProducts, handleSearch };
-}
+//   const handleSearch = (term: string) => {
+//     setSearchTerm(term);
+//     // const results = productos.filter((producto) =>
+//       producto.nombre.toLowerCase().includes(term.toLowerCase())
+//     );
+//     setFilteredProducts(results);
+//   };
 
-export default useProductSearch;
+//   return { searchTerm, filteredProducts, handleSearch };
+// }
+
+// export default useProductSearch;

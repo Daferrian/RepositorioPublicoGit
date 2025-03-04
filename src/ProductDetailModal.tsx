@@ -1,13 +1,14 @@
 import React from "react";
 
+
 interface Producto {
   id: number;
   nombre: string;
   precio: number;
-  imagen: string;
   descripcion: string;
   marca: string;
-  especificaciones: string;
+  especificacion: string;
+  categoria: string;
 }
 
 interface ModalProps {
@@ -19,12 +20,12 @@ const ProductDetailModal: React.FC<ModalProps> = ({ producto, onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <img src={producto.imagen} alt={producto.nombre} className="modal-imagen" />
+        <img src={`../src/assets/images/${producto.id}.jpg`   } alt={producto.nombre} className="modal-imagen" />
         <h2>{producto.nombre}</h2>
         <p><strong>Precio:</strong> ${producto.precio.toFixed(2)}</p>
         <p><strong>Descripción:</strong> {producto.descripcion}</p>
         <p><strong>Marca:</strong> {producto.marca}</p>
-        <p><strong>Especificaciones:</strong> {producto.especificaciones}</p>
+        <p><strong>Especificaciones:</strong> {producto.especificacion}</p>
         <button onClick={onClose} className="close-modal">
           Cerrar
         </button>

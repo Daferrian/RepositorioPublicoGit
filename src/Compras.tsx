@@ -1,172 +1,185 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductDetailModal from "./ProductDetailModal";
-import useProductSearch from "./useProductSearch";
+import {getProducts, getSearchProductos} from './helpers/getProducts';
 
-// Importar imágenes locales
-import camisetaImg from "../src/assets/images/camiseta.jpg";
-import pantalonImg from "../src/assets/images/pantalon.jpg";
-import zapatillasImg from "../src/assets/images/zapatillas.jpg";
-import gorraImg from "../src/assets/images/gorra.jpg";
-import mochilaImg from "../src/assets/images/mochilla.jpg";
+
+
 
 interface Producto {
   id: number;
   nombre: string;
   precio: number;
-  imagen: string;
   descripcion: string;
   marca: string;
-  especificaciones: string;
+  especificacion: string;
+  categoria: string;
 }
 
-const productos: Producto[] = [
-  {
-    id: 1,
-    nombre: "Camiseta",
-    precio: 15.99,
-    imagen: camisetaImg,
-    descripcion: "Camiseta de algodón, cómoda y ligera.",
-    marca: "Marca A",
-    especificaciones: "100% algodón, tallas S/M/L.",
-  },
-  {
-    id: 2,
-    nombre: "Pantalón",
-    precio: 35.5,
-    imagen: pantalonImg,
-    descripcion: "Pantalón casual, ideal para el día a día.",
-    marca: "Marca B",
-    especificaciones: "Mezclilla, colores variados.",
-  },
-  {
-    id: 3,
-    nombre: "Zapatillas",
-    precio: 45.75,
-    imagen: zapatillasImg,
-    descripcion: "Zapatillas deportivas con gran confort.",
-    marca: "Marca C",
-    especificaciones: "Suela de goma, tallas 6-11.",
-  },
-  {
-    id: 4,
-    nombre: "Gorra",
-    precio: 9.99,
-    imagen: gorraImg,
-    descripcion: "Gorra ajustable, perfecta para el sol.",
-    marca: "Marca D",
-    especificaciones: "Material poliéster, diseño unisex.",
-  },
-  {
-    id: 5,
-    nombre: "Mochila",
-    precio: 25.3,
-    imagen: mochilaImg,
-    descripcion: "Mochila resistente y espaciosa.",
-    marca: "Marca E",
-    especificaciones: "30L de capacidad, varios compartimentos.",
-  },
-  {
-    id: 6,
-    nombre: "Reloj",
-    precio: 75.0,
-    imagen: "../src/assets/images/reloj.jpg",
-    descripcion: "Reloj de lujo con diseño moderno.",
-    marca: "Marca F",
-    especificaciones: "Acero inoxidable, resistente al agua.",
-  },
-  {
-    id: 7,
-    nombre: "Audífonos",
-    precio: 49.9,
-    imagen: "../src/assets/images/audifonos.jpg",
-    descripcion: "Audífonos con sonido envolvente.",
-    marca: "Marca G",
-    especificaciones: "Bluetooth 5.0, batería de 12h.",
-  },
-  {
-    id: 8,
-    nombre: "Laptop",
-    precio: 899.99,
-    imagen: "../src/assets/images/laptop.jpg",
-    descripcion: "Laptop de alto rendimiento.",
-    marca: "Marca H",
-    especificaciones: "16GB RAM, 512GB SSD.",
-  },
-  {
-    id: 9,
-    nombre: "Mouse",
-    precio: 19.99,
-    imagen: "../src/assets/images/mouse.jpg",
-    descripcion: "Mouse ergonómico inalámbrico.",
-    marca: "Marca I",
-    especificaciones: "Sensor óptico, DPI ajustable.",
-  },
-  {
-    id: 10,
-    nombre: "Teclado",
-    precio: 45.0,
-    imagen: "../src/assets/images/teclado.jpg",
-    descripcion: "Teclado mecánico retroiluminado.",
-    marca: "Marca J",
-    especificaciones: "Interruptores mecánicos, RGB.",
-  },
-  {
-    id: 11,
-    nombre: "Monitor",
-    precio: 200.0,
-    imagen: "../src/assets/images/monitor.jpg",
-    descripcion: "Monitor Full HD de 27 pulgadas.",
-    marca: "Marca K",
-    especificaciones: "Panel IPS, tasa de refresco 144Hz.",
-  },
-  {
-    id: 12,
-    nombre: "Tablet",
-    precio: 350.0,
-    imagen: "../src/assets/images/tablet.jpg",
-    descripcion: "Tablet compacta y potente.",
-    marca: "Marca L",
-    especificaciones: "Pantalla de 10 pulgadas, 128GB de almacenamiento.",
-  },
-  {
-    id: 13,
-    nombre: "Cámara",
-    precio: 499.99,
-    imagen: "../src/assets/images/camara.jpg",
-    descripcion: "Cámara profesional DSLR.",
-    marca: "Marca M",
-    especificaciones: "Resolución 24MP, grabación 4K.",
-  },
-  {
-    id: 14,
-    nombre: "Auriculares Gaming",
-    precio: 69.99,
-    imagen: "../src/assets/images/auriculares.jpg",
-    descripcion: "Auriculares con micrófono ajustable.",
-    marca: "Marca N",
-    especificaciones: "Compatibles con PC y consolas.",
-  },
-  {
-    id: 15,
-    nombre: "Altavoz Bluetooth",
-    precio: 39.99,
-    imagen: "../src/assets/images/altavoz.jpg",
-    descripcion: "Altavoz portátil con sonido nítido.",
-    marca: "Marca O",
-    especificaciones: "Resistente al agua, 20h de batería.",
-  },
-];
+// "id": "8",
+// "categoria": "Audífonos",
+// "descripcion": "Audífonos con sonido envolvente.",
+// "especificacion": "Bluetooth 5.0, batería de 12h.",
+// "nombre": "Audífonos",
+// "marca": "Marca C"
+
+// const productos: Producto[] = [
+//   {
+//     id: 1,
+//     nombre: "Camiseta",
+//     precio: 15.99,
+//     imagen: camisetaImg,
+//     descripcion: "Camiseta de algodón, cómoda y ligera.",
+//     marca: "Marca A",
+//     especificaciones: "100% algodón, tallas S/M/L.",
+//   },
+//   {
+//     id: 2,
+//     nombre: "Pantalón",
+//     precio: 35.5,
+//     imagen: pantalonImg,
+//     descripcion: "Pantalón casual, ideal para el día a día.",
+//     marca: "Marca B",
+//     especificaciones: "Mezclilla, colores variados.",
+//   },
+//   {
+//     id: 3,
+//     nombre: "Zapatillas",
+//     precio: 45.75,
+//     imagen: zapatillasImg,
+//     descripcion: "Zapatillas deportivas con gran confort.",
+//     marca: "Marca C",
+//     especificaciones: "Suela de goma, tallas 6-11.",
+//   },
+//   {
+//     id: 4,
+//     nombre: "Gorra",
+//     precio: 9.99,
+//     imagen: gorraImg,
+//     descripcion: "Gorra ajustable, perfecta para el sol.",
+//     marca: "Marca D",
+//     especificaciones: "Material poliéster, diseño unisex.",
+//   },
+//   {
+//     id: 5,
+//     nombre: "Mochila",
+//     precio: 25.3,
+//     imagen: mochilaImg,
+//     descripcion: "Mochila resistente y espaciosa.",
+//     marca: "Marca E",
+//     especificaciones: "30L de capacidad, varios compartimentos.",
+//   },
+//   {
+//     id: 6,
+//     nombre: "Reloj",
+//     precio: 75.0,
+//     imagen: "../src/assets/images/reloj.jpg",
+//     descripcion: "Reloj de lujo con diseño moderno.",
+//     marca: "Marca F",
+//     especificaciones: "Acero inoxidable, resistente al agua.",
+//   },
+//   {
+//     id: 7,
+//     nombre: "Audífonos",
+//     precio: 49.9,
+//     imagen: "../src/assets/images/audifonos.jpg",
+//     descripcion: "Audífonos con sonido envolvente.",
+//     marca: "Marca G",
+//     especificaciones: "Bluetooth 5.0, batería de 12h.",
+//   },
+//   {
+//     id: 8,
+//     nombre: "Laptop",
+//     precio: 899.99,
+//     imagen: "../src/assets/images/laptop.jpg",
+//     descripcion: "Laptop de alto rendimiento.",
+//     marca: "Marca H",
+//     especificaciones: "16GB RAM, 512GB SSD.",
+//   },
+//   {
+//     id: 9,
+//     nombre: "Mouse",
+//     precio: 19.99,
+//     imagen: "../src/assets/images/mouse.jpg",
+//     descripcion: "Mouse ergonómico inalámbrico.",
+//     marca: "Marca I",
+//     especificaciones: "Sensor óptico, DPI ajustable.",
+//   },
+//   {
+//     id: 10,
+//     nombre: "Teclado",
+//     precio: 45.0,
+//     imagen: "../src/assets/images/teclado.jpg",
+//     descripcion: "Teclado mecánico retroiluminado.",
+//     marca: "Marca J",
+//     especificaciones: "Interruptores mecánicos, RGB.",
+//   },
+//   {
+//     id: 11,
+//     nombre: "Monitor",
+//     precio: 200.0,
+//     imagen: "../src/assets/images/monitor.jpg",
+//     descripcion: "Monitor Full HD de 27 pulgadas.",
+//     marca: "Marca K",
+//     especificaciones: "Panel IPS, tasa de refresco 144Hz.",
+//   },
+//   {
+//     id: 12,
+//     nombre: "Tablet",
+//     precio: 350.0,
+//     imagen: "../src/assets/images/tablet.jpg",
+//     descripcion: "Tablet compacta y potente.",
+//     marca: "Marca L",
+//     especificaciones: "Pantalla de 10 pulgadas, 128GB de almacenamiento.",
+//   },
+//   {
+//     id: 13,
+//     nombre: "Cámara",
+//     precio: 499.99,
+//     imagen: "../src/assets/images/camara.jpg",
+//     descripcion: "Cámara profesional DSLR.",
+//     marca: "Marca M",
+//     especificaciones: "Resolución 24MP, grabación 4K.",
+//   },
+//   {
+//     id: 14,
+//     nombre: "Auriculares Gaming",
+//     precio: 69.99,
+//     imagen: "../src/assets/images/auriculares.jpg",
+//     descripcion: "Auriculares con micrófono ajustable.",
+//     marca: "Marca N",
+//     especificaciones: "Compatibles con PC y consolas.",
+//   },
+//   {
+//     id: 15,
+//     nombre: "Altavoz Bluetooth",
+//     precio: 39.99,
+//     imagen: "../src/assets/images/altavoz.jpg",
+//     descripcion: "Altavoz portátil con sonido nítido.",
+//     marca: "Marca O",
+//     especificaciones: "Resistente al agua, 20h de batería.",
+//   },
+// ];
 
 const Compras: React.FC = () => {
+  const [productos, setProductos] = useState<Producto[]>([])
   const [carrito, setCarrito] = useState<Producto[]>([]);
-  //- const [busqueda, setBusqueda] = useState<string>("");
-  const [productoSeleccionado, setProductoSeleccionado] =
-    useState<Producto | null>(null);
+  const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const { handleSearch } = useProductSearch(productos);
 
-  // hook personalizado filtro de productos
-  const { searchTerm, filteredProducts, handleSearch } =
-    useProductSearch(productos);
+
+  useEffect(() => {
+    getProducts()
+      .then(prod => setProductos(prod))
+      .catch(err => console.log(err));
+    
+  }, []);
+
+  //- const [busqueda, setBusqueda] = useState<string>("");
+  
 
   // Cargar carrito desde localStorage al montar el componente
   useEffect(() => {
@@ -227,20 +240,39 @@ const Compras: React.FC = () => {
         se cambio este hook normal por uno personalizado para poder ocuparlo en distintos ambitos 
         */}
         {/* Campo de búsqueda */}
-        <input
+        <div>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Producto"
+            className="busqueda-input"
+          />
+
+          <input
           type="text"
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-          placeholder="Buscar productos..."
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          placeholder="Descripcion"
           className="busqueda-input"
         />
 
+        <button
+        onClick={() => {
+          getSearchProductos(nombre, descripcion)
+          .then(prod => setProductos(prod))
+          .catch(err => console.log(err));
+        }}
+        >Buscar</button>
+
+        </div>
+
         <div className="productos-lista">
           {/* implemento de hook en el filtro */}
-          {filteredProducts.map((producto) => (
+          {productos.map((producto) => (
             <div key={producto.id} className="producto-item">
               <img
-                src={producto.imagen}
+                src={`../src/assets/images/${producto.id}.jpg`}
                 alt={producto.nombre}
                 className="producto-imagen"
               />
@@ -304,8 +336,18 @@ const Compras: React.FC = () => {
           padding: 20px;
         }
 
+        button{
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 4px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.5s ease;
+        }
+
         .busqueda-input {
           margin-bottom: 20px;
+          margin-right:5px;
           padding: 10px;
           width: 100%;
           max-width: 300px;
